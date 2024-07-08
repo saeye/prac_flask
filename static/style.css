@@ -1,0 +1,36 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.choice-img {
+    width: 250px;
+    height: 250px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+#result {
+    font-size: 18px;
+}
+
+#stats {
+    font-size: 18px;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+th, td {
+    text-align: center;
+}
+
+.container {
+    position: relative;
+}
+
+.d-flex {
+    display: flex;
+    justify-content: space-between;
+}
+

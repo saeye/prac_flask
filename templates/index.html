@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>가위바위보 게임</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .game-title {
+            font-family: 'Roboto Mono', monospace;
+            color: black;
+            font-weight: bold;
+            margin-top: 50px;
+            margin-bottom: 100px;
+        }
+        .choices.mb-2 {
+            margin-bottom: 40px;
+        }
+        .mb-2 {
+            margin-bottom: 70px;
+        }
+        .btn-container {
+            margin-top: 70px;
+        }
+        .choices-btn {
+            background-color: snow;
+            color: teal;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        async function playGame(choice) {
+            const response = await fetch('/play', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ choice: choice })
+            });
+            const result = await response.json();
+            document.getElementById('result').innerText = `나: ${result.player_choice}, 컴퓨터: ${result.computer_choice} \n결과: ${result.result}`;
+            document.getElementById('win').innerText = `승: ${result.win}`;
+            document.getElementById('lose').innerText = `패: ${result.lose}`;
+            document.getElementById('draw').innerText = `무승부: ${result.draw}`;
+
+            const table = document.getElementById('history-table').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            newRow.insertCell(0).innerText = table.rows.length;
+            newRow.insertCell(1).innerText = result.player_choice;
+            newRow.insertCell(2).innerText = result.computer_choice;
+            newRow.insertCell(3).innerText = result.result;
+        }
+
+        async function resetGame() {
+            const response = await fetch('/reset', {
+                method: 'POST'
+            });
+            const result = await response.json();
+            if (result.status === 'reset') {
+                document.getElementById('result').innerText = '';
+                document.getElementById('win').innerText = '승: 0';
+                document.getElementById('lose').innerText = '패: 0';
+                document.getElementById('draw').innerText = '무승부: 0';
+                const table = document.getElementById('history-table').getElementsByTagName('tbody')[0];
+                while (table.rows.length > 0) {
+                    table.deleteRow(0);
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container text-center">
+        <h1 class="my-4 game-title font-weight-bold">Rock Paper Scissors</h1>
+        <div class="choices mb-2">
+            <img src="{{ url_for('static', filename='scissors.png') }}" alt="가위" onclick="playGame('가위')" class="choice-img">
+            <img src="{{ url_for('static', filename='rock.png') }}" alt="바위" onclick="playGame('바위')" class="choice-img">
+            <img src="{{ url_for('static', filename='paper.png') }}" alt="보" onclick="playGame('보')" class="choice-img">
+        </div>
+        <button class="choices-btn mb-2">가위 바위 보 그림 중 하나를 선택하세요!</button>
+        <p id="result" class="mb-4" style="display: none;"></p>
+        <div class="btn-container mb-4">
+            <div class="d-flex justify-content-between mb-4">
+                <div>
+                    <button class="btn btn-info btn-sm" id="win">승: 0</button>
+                    <button class="btn btn-info btn-sm" id="lose">패: 0</button>
+                    <button class="btn btn-info btn-sm" id="draw">무승부: 0</button>
+                </div>
+                <button class="btn btn-secondary" onclick="resetGame()">다시 시작</button>
+            </div>
+            <table class="table table-bordered" id="history-table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>사용자</th>
+                        <th>컴퓨터</th>
+                        <th>결과</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
