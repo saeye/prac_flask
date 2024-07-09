@@ -6,9 +6,9 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # 세션을 위한 시크릿 키 설정 (데이터 변조 방지) / 물론 이 데이터에서는 큰 의미 없어보임
 
 # SQLite 데이터베이스 설정
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///game_history.db' # SQLite 데이터베이스 파일 설정
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # 데이터베이스 변경 추적기능 비활성화
-db = SQLAlchemy(app) # flask랑 연결
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///game_history.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 option = ["가위", "바위", "보"]
 
